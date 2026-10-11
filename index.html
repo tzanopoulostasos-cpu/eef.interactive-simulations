@@ -307,9 +307,6 @@ mjx-container[display="true"]{max-width:100%!important;overflow-x:auto;overflow-
 
 /* ─── Google Translate Widget ─── */
 .physics-dark #gt-toggle{background:rgba(15,23,42,0.95);color:#e2e8f0;border-color:#334155}
- .physics-dark #gt-reset{background:rgba(15,23,42,0.95);color:#e2e8f0;border-color:#334155}
-.physics-dark #gt-reset:hover{background:rgba(30,41,59,0.95)}
-#gt-reset:hover{background:#f1f5f9}
 .physics-dark #gt-panel{background:#0f172a;border-color:#334155;box-shadow:0 10px 30px rgba(0,0,0,0.5)}
 .physics-dark .goog-te-gadget{color:#e2e8f0!important}
 .physics-dark .goog-te-gadget-simple{background:#1e293b!important;border-color:#334155!important}
@@ -325,6 +322,35 @@ mjx-container[display="true"]{max-width:100%!important;overflow-x:auto;overflow-
 body{top:0!important}
 
 #goog-gt-tt{display:none!important}
+
+/* ─── Custom Tooltip για το κουμπί θέματος ─── */
+.theme-btn{position:relative}
+.theme-btn::after{
+  content:attr(data-tooltip);
+  position:absolute;top:calc(100% + 10px);right:0;
+  padding:6px 12px;background:#0f172a;color:#fff;
+  font-size:11px;font-weight:600;font-family:Inter,system-ui,sans-serif;
+  white-space:nowrap;border-radius:6px;
+  box-shadow:0 4px 12px rgba(15,23,42,0.25);
+  opacity:0;pointer-events:none;transform:translateY(-4px);
+  transition:opacity .18s ease,transform .18s ease;z-index:60;
+}
+.theme-btn::before{
+  content:"";position:absolute;top:calc(100% + 4px);right:14px;
+  width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;
+  border-bottom:6px solid #0f172a;opacity:0;pointer-events:none;
+  transition:opacity .18s ease;z-index:60;
+}
+.theme-btn:hover::after,.theme-btn:hover::before,
+.theme-btn:focus-visible::after,.theme-btn:focus-visible::before{
+  opacity:1;transform:translateY(0);
+}
+.physics-dark .theme-btn::after{background:#e2e8f0;color:#0f172a;box-shadow:0 4px 12px rgba(0,0,0,0.5)}
+.physics-dark .theme-btn::before{border-bottom-color:#e2e8f0}
+@media (hover:none){
+  .theme-btn:active::after,.theme-btn:active::before{opacity:1;transform:translateY(0)}
+}
+
 /* ---------- Εκτύπωση ---------- */
 @media print{
  .no-print,.hdr,#progress,.score,.fab,.mk,.px-sim,.pf{display:none!important}
@@ -426,15 +452,6 @@ div.pf.pf-dark button.pf-btn.on,div.pf.pf-dark button.pf-go{background:#6366f1;b
     <i class="fa-solid fa-chevron-down" style="font-size:10px;opacity:0.6;"></i>
   </button>
 
-   <button id="gt-reset"
-          type="button"
-          aria-label="Επιστροφή στα Ελληνικά"
-          title="Επιστροφή στα Ελληνικά"
-          onclick="resetToGreek()"
-          style="display:flex;align-items:center;gap:6px;padding:8px 12px;border:1px solid #e2e8f0;border-radius:10px;background:rgba(255,255,255,0.95);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#334155;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 12px rgba(15,23,42,0.12);margin-top:6px;width:100%;justify-content:center;transition:background 0.15s;">
-    <span style="font-size:16px;">🇬🇷</span>
-    <span>Ελληνικά</span>
-  </button>
   <div id="gt-panel"
        style="display:none;position:absolute;top:100%;right:0;margin-top:8px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;box-shadow:0 10px 30px rgba(15,23,42,0.18);padding:8px;min-width:200px;">
     <div id="google_translate_element"></div>
@@ -443,27 +460,10 @@ div.pf.pf-dark button.pf-btn.on,div.pf.pf-dark button.pf-go{background:#6366f1;b
 
 <!-- Google Translate script -->
 <script type="text/javascript">
- function resetToGreek() {
-  // 1. Καθαρίζει το Google Translate cookie
-  var exp = 'expires=Thu, 01 Jan 1970 00:00:00 UTC';
-  var host = location.hostname;
-  document.cookie = 'googtrans=; ' + exp + '; path=/;';
-  document.cookie = 'googtrans=; ' + exp + '; path=/; domain=' + host + ';';
-  document.cookie = 'googtrans=; ' + exp + '; path=/; domain=.' + host + ';';
-
-  // 2. Καθαρίζει το localStorage (αν έχει χρησιμοποιηθεί)
-  try { localStorage.removeItem('googtrans'); } catch(e) {}
-
-  // 3. Καθαρίζει το sessionStorage
-  try { sessionStorage.removeItem('googtrans'); } catch(e) {}
-
-  // 4. Επαναφορτώνει τη σελίδα (θα φορτώσει στα ελληνικά)
-  location.reload();
-}
 function googleTranslateElementInit() {
   new google.translate.TranslateElement({
     pageLanguage: 'el',
-    includedLanguages: 'el,en,de,fr,it,es,pt,ru,ar,zh-CN,ja,ko,tr,ro,bg,sr,pl,nl,sv,da,fi,cs,hu,he,hi',
+    includedLanguages: 'en,de,fr,it,es,pt,ru,ar,zh-CN,ja,ko,tr,ro,bg,sr,pl,nl,sv,da,fi,cs,hu,he,hi',
     layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
     autoDisplay: false,
     multilanguagePage: true
@@ -477,12 +477,12 @@ function googleTranslateElementInit() {
 
 <header class="hdr no-print">
  <div class="hdr-in">
-  <div class="brand"><span class="logo"><i class="fa-solid fa-atom"></i></span><div><small>My Physics Blog</small><b>Προσομοίωση 2026</b></div></div>
+  <div class="brand"><span class="logo"><i class="fa-solid fa-atom"></i></span><div><small>My Physics Blog</small><b>Προσομοίωση 2025</b></div></div>
   <nav class="nav" aria-label="Θέματα"><a href="#tema-a">Θέμα Α</a><a href="#tema-b">Θέμα Β</a><a href="#tema-g">Θέμα Γ</a><a href="#tema-d">Θέμα Δ</a></nav>
   <div class="tools">
    <button onclick="toggleCheatsheet()" title="Τυπολόγιο"><i class="fa-solid fa-book-bookmark" style="color:#06b6d4"></i><span>Τυπολόγιο</span></button>
    <button onclick="toggleCalculator()" title="Υπολογιστής Φυσικής"><i class="fa-solid fa-calculator" style="color:#3b82f6"></i><span>Calculator</span></button>
-   <button onclick="toggleTheme()" aria-label="Εναλλαγή θέματος"><i class="fa-solid fa-moon ico-moon"></i><i class="fa-solid fa-sun ico-sun"></i></button>
+   <button onclick="toggleTheme()" aria-label="Εναλλαγή θέματος" class="theme-btn" data-tooltip="Μετάβαση σε σκοτεινό θέμα"><i class="fa-solid fa-moon ico-moon"></i><i class="fa-solid fa-sun ico-sun"></i></button>
   </div>
  </div>
 </header>
@@ -1084,8 +1084,10 @@ function revealContent(){
 
 /* ═════════════ ΘΕΜΑ, MODALS ═════════════ */
 function toggleTheme(){
- const d=document.documentElement.classList.toggle('physics-dark');
- try{localStorage.setItem('physics-theme',d?'dark':'light');}catch(e){}
+  const d=document.documentElement.classList.toggle('physics-dark');
+  try{localStorage.setItem('physics-theme',d?'dark':'light');}catch(e){}
+  const btn=document.querySelector('.theme-btn');
+  if(btn)btn.dataset.tooltip=d?'Μετάβαση σε φωτεινό θέμα':'Μετάβαση σε σκοτεινό θέμα';
 }
 function toggleCalculator(){byId('calculatorModal').classList.toggle('hidden');}
 function toggleCheatsheet(){byId('cheatsheetDrawer').classList.toggle('open');}
