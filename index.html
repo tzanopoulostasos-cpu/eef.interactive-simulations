@@ -307,6 +307,9 @@ mjx-container[display="true"]{max-width:100%!important;overflow-x:auto;overflow-
 
 /* ─── Google Translate Widget ─── */
 .physics-dark #gt-toggle{background:rgba(15,23,42,0.95);color:#e2e8f0;border-color:#334155}
+ .physics-dark #gt-reset{background:rgba(15,23,42,0.95);color:#e2e8f0;border-color:#334155}
+.physics-dark #gt-reset:hover{background:rgba(30,41,59,0.95)}
+#gt-reset:hover{background:#f1f5f9}
 .physics-dark #gt-panel{background:#0f172a;border-color:#334155;box-shadow:0 10px 30px rgba(0,0,0,0.5)}
 .physics-dark .goog-te-gadget{color:#e2e8f0!important}
 .physics-dark .goog-te-gadget-simple{background:#1e293b!important;border-color:#334155!important}
@@ -423,6 +426,15 @@ div.pf.pf-dark button.pf-btn.on,div.pf.pf-dark button.pf-go{background:#6366f1;b
     <i class="fa-solid fa-chevron-down" style="font-size:10px;opacity:0.6;"></i>
   </button>
 
+   <button id="gt-reset"
+          type="button"
+          aria-label="Επιστροφή στα Ελληνικά"
+          title="Επιστροφή στα Ελληνικά"
+          onclick="resetToGreek()"
+          style="display:flex;align-items:center;gap:6px;padding:8px 12px;border:1px solid #e2e8f0;border-radius:10px;background:rgba(255,255,255,0.95);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#334155;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 12px rgba(15,23,42,0.12);margin-top:6px;width:100%;justify-content:center;transition:background 0.15s;">
+    <span style="font-size:16px;">🇬🇷</span>
+    <span>Ελληνικά</span>
+  </button>
   <div id="gt-panel"
        style="display:none;position:absolute;top:100%;right:0;margin-top:8px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;box-shadow:0 10px 30px rgba(15,23,42,0.18);padding:8px;min-width:200px;">
     <div id="google_translate_element"></div>
@@ -431,10 +443,27 @@ div.pf.pf-dark button.pf-btn.on,div.pf.pf-dark button.pf-go{background:#6366f1;b
 
 <!-- Google Translate script -->
 <script type="text/javascript">
+ function resetToGreek() {
+  // 1. Καθαρίζει το Google Translate cookie
+  var exp = 'expires=Thu, 01 Jan 1970 00:00:00 UTC';
+  var host = location.hostname;
+  document.cookie = 'googtrans=; ' + exp + '; path=/;';
+  document.cookie = 'googtrans=; ' + exp + '; path=/; domain=' + host + ';';
+  document.cookie = 'googtrans=; ' + exp + '; path=/; domain=.' + host + ';';
+
+  // 2. Καθαρίζει το localStorage (αν έχει χρησιμοποιηθεί)
+  try { localStorage.removeItem('googtrans'); } catch(e) {}
+
+  // 3. Καθαρίζει το sessionStorage
+  try { sessionStorage.removeItem('googtrans'); } catch(e) {}
+
+  // 4. Επαναφορτώνει τη σελίδα (θα φορτώσει στα ελληνικά)
+  location.reload();
+}
 function googleTranslateElementInit() {
   new google.translate.TranslateElement({
     pageLanguage: 'el',
-    includedLanguages: 'en,de,fr,it,es,pt,ru,ar,zh-CN,ja,ko,tr,ro,bg,sr,pl,nl,sv,da,fi,cs,hu,he,hi',
+    includedLanguages: 'el,en,de,fr,it,es,pt,ru,ar,zh-CN,ja,ko,tr,ro,bg,sr,pl,nl,sv,da,fi,cs,hu,he,hi',
     layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
     autoDisplay: false,
     multilanguagePage: true
