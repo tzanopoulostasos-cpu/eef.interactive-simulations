@@ -305,6 +305,23 @@ mjx-container[display="true"]{max-width:100%!important;overflow-x:auto;overflow-
 .physics-dark .drawer{background:#0f172a;border-color:#1e293b}.physics-dark .drawer-h{border-color:#1e293b}
 .physics-dark .drawer-h h3{color:#f1f5f9}.physics-dark .fm{background:rgba(30,41,59,.7);color:#e2e8f0}
 
+/* ─── Google Translate Widget ─── */
+.physics-dark #gt-toggle{background:rgba(15,23,42,0.95);color:#e2e8f0;border-color:#334155}
+.physics-dark #gt-panel{background:#0f172a;border-color:#334155;box-shadow:0 10px 30px rgba(0,0,0,0.5)}
+.physics-dark .goog-te-gadget{color:#e2e8f0!important}
+.physics-dark .goog-te-gadget-simple{background:#1e293b!important;border-color:#334155!important}
+.physics-dark .goog-te-menu-value span{color:#e2e8f0!important}
+.physics-dark .goog-te-menu-value{color:#e2e8f0!important}
+/* Κρύβει το Google logo/branding μέσα στο widget */
+.goog-logo-link{display:none!important}
+.goog-te-gadget{font-family:Inter,system-ui,sans-serif!important;font-size:12px!important}
+.goog-te-gadget .goog-te-combo{font-family:inherit!important;font-size:13px!important;padding:6px 10px;border:1px solid #cbd5e1;border-radius:8px;background:#f8fafc;color:#0f172a;cursor:pointer;width:100%;}
+.goog-te-gadget .goog-te-combo:focus{outline:2px solid #0891b2;outline-offset:2px;}
+/* Κρύβει το banner του Google Translate στο πάνω μέρος */
+.goog-te-banner-frame{display:none!important}
+body{top:0!important}
+
+#goog-gt-tt{display:none!important}
 /* ---------- Εκτύπωση ---------- */
 @media print{
  .no-print,.hdr,#progress,.score,.fab,.mk,.px-sim,.pf{display:none!important}
@@ -388,6 +405,45 @@ div.pf.pf-dark button.pf-btn.on,div.pf.pf-dark button.pf-go{background:#6366f1;b
 </head>
 
 <body>
+<!-- ═══════════════════════════════════════════════════════
+     GOOGLE TRANSLATE WIDGET
+     Επιτρέπει μετάφραση της σελίδας σε πολλές γλώσσες.
+     ═══════════════════════════════════════════════════════ -->
+
+<!-- Κουμπί toggle + panel -->
+<div id="gt-wrap" class="no-print" style="position:fixed;top:70px;right:16px;z-index:60;font-family:Inter,system-ui,sans-serif;">
+  <button id="gt-toggle"
+          type="button"
+          aria-label="Αλλαγή γλώσσας"
+          aria-expanded="false"
+          onclick="(function(b){var p=document.getElementById('gt-panel');var o=p.style.display==='block';p.style.display=o?'none':'block';b.setAttribute('aria-expanded',String(!o));})(this)"
+          style="display:flex;align-items:center;gap:6px;padding:8px 12px;border:1px solid #e2e8f0;border-radius:10px;background:rgba(255,255,255,0.95);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#334155;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 12px rgba(15,23,42,0.12);">
+    <i class="fa-solid fa-globe" style="color:#0891b2;"></i>
+    <span>Γλώσσα</span>
+    <i class="fa-solid fa-chevron-down" style="font-size:10px;opacity:0.6;"></i>
+  </button>
+
+  <div id="gt-panel"
+       style="display:none;position:absolute;top:100%;right:0;margin-top:8px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;box-shadow:0 10px 30px rgba(15,23,42,0.18);padding:8px;min-width:200px;">
+    <div id="google_translate_element"></div>
+  </div>
+</div>
+
+<!-- Google Translate script -->
+<script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'el',
+    includedLanguages: 'en,de,fr,it,es,pt,ru,ar,zh-CN,ja,ko,tr,ro,bg,sr,pl,nl,sv,da,fi,cs,hu,he,hi',
+    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+    autoDisplay: false,
+    multilanguagePage: true
+  }, 'google_translate_element');
+}
+</script>
+<script type="text/javascript"
+        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+        async></script>
 <div id="progress" class="no-print"><i id="progressBar"></i></div>
 
 <header class="hdr no-print">
